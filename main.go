@@ -8,9 +8,11 @@ import (
 )
 
 func main() {
-	r := geometry.Rectangle{Length: 5, Breadth: 4}
-	fmt.Println(r.Area())      // 20
-	fmt.Println(r.Perimeter()) // 18
+	rectangle := geometry.Rectangle{Length: 5, Breadth: 4}
+	circle := geometry.Circle{Radius: 14}
+
+	geometry.PrintShapeDetails(rectangle)
+	geometry.PrintShapeDetails(circle)
 
 	acc := bank.BankAccount{Owner: "Ravi", Balance: 1000}
 	acc.PrintBalance()
