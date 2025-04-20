@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go-hero/bank"
 	"go-hero/geometry"
+	"go-hero/logging"
 	"go-hero/media"
 )
 
@@ -32,4 +33,19 @@ func main() {
 	fmt.Println(playlist.TotalDuration())
 	playlist.PrintSongs()
 
+	fileLogger, err := logging.NewFileLogger("testlog.log")
+	if err != nil {
+		fmt.Println("error opening the file")
+	} else {
+		loggers := []logging.Logger{
+			&logging.ConsoleLogger{},
+			fileLogger,
+		}
+
+		for _, logger := range loggers {
+			logger.Info("Info Message")
+			logger.Error("Error Message", nil)
+			logger.Error("Error Message with Error", fmt.Errorf("error error error"))
+		}
+	}
 }
