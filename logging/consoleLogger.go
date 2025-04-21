@@ -2,22 +2,20 @@ package logging
 
 import (
 	"fmt"
-	"time"
 )
 
 type ConsoleLogger struct {
+	BaseLogger
 }
 
 func (logger *ConsoleLogger) Info(msg string) {
-	timestamp := time.Now().UTC().Format("2006-01-02 15:04:05")
-	fmt.Printf("%s : INFO : %s\n", timestamp, msg)
+	fmt.Printf("%s : INFO : %s\n", logger.timestamp(), msg)
 }
 
 func (logger *ConsoleLogger) Error(msg string, err error) {
-	timestamp := time.Now().UTC().Format("2006-01-02 15:04:05")
 	if err != nil {
-		fmt.Printf("%s : ERROR : %s; error - %s\n", timestamp, msg, err)
+		fmt.Printf("%s : ERROR : %s; error - %s\n", logger.timestamp(), msg, err)
 	} else {
-		fmt.Printf("%s : ERROR : %s\n", timestamp, msg)
+		fmt.Printf("%s : ERROR : %s\n", logger.timestamp(), msg)
 	}
 }

@@ -33,12 +33,12 @@ func main() {
 	fmt.Println(playlist.TotalDuration())
 	playlist.PrintSongs()
 
-	fileLogger, err := logging.NewFileLogger("testlog.log")
+	fileLogger, err := logging.NewFileLogger("testlog.log", true)
 	if err != nil {
 		fmt.Println("error opening the file")
 	} else {
 		loggers := []logging.Logger{
-			&logging.ConsoleLogger{},
+			&logging.ConsoleLogger{BaseLogger: logging.BaseLogger{Utc: false}},
 			fileLogger,
 		}
 

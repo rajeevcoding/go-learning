@@ -3,20 +3,23 @@ package logging
 import (
 	"fmt"
 	"os"
-	"time"
 )
 
 type FileLogger struct {
+	BaseLogger
 	fileName string
 	file     *os.File
 }
 
-func NewFileLogger(fileName string) (*FileLogger, error) {
+func NewFileLogger(fileName string, utc bool) (*FileLogger, error) {
 	if fileName == "" {
 		return nil, fmt.Errorf("filename cannot be empty string")
 	}
 
-	fl := &FileLogger{fileName: fileName}
+	fl := &FileLogger{
+		fileName:   fileName,
+		BaseLogger: BaseLogger{Utc: utc},
+	}
 	err := fl.open()
 	if err != nil {
 		return nil, err
@@ -43,8 +46,7 @@ func (fl *FileLogger) Close() {
 
 func (fl *FileLogger) Info(msg string) {
 
-	timestamp := time.Now().UTC().Format("2006-01-02 15:04:05")
-	logMessage := fmt.Sprintf("%s : INFO : %s\n", timestamp, msg)
+	logMessage := fmt.Sprintf("%s : INFO : %s\n", fl.timestamp(), msg)
 	_, e := fl.file.WriteString(logMessage)
 	if e != nil {
 		fmt.Printf("Error writing to log file: %s\n", e)
@@ -53,12 +55,11 @@ func (fl *FileLogger) Info(msg string) {
 
 func (fl *FileLogger) Error(msg string, err error) {
 
-	timestamp := time.Now().UTC().Format("2006-01-02 15:04:05")
 	logMessage := ""
 	if err != nil {
-		logMessage = fmt.Sprintf("%s : ERROR : %s; error - %s\n", timestamp, msg, err)
+		logMessage = fmt.Sprintf("%s : ERROR : %s; error - %s\n", fl.timestamp(), msg, err)
 	} else {
-		logMessage = fmt.Sprintf("%s : ERROR : %s\n", timestamp, msg)
+		logMessage = fmt.Sprintf("%s : ERROR : %s\n", fl.timestamp(), msg)
 	}
 	_, e := fl.file.WriteString(logMessage)
 	if e != nil {
